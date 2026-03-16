@@ -1,0 +1,151 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.App main {
+  flex: 1;
+}
+
+.min-vh-100 {
+  min-height: 100vh;
+}
+
+/* Form Styles */
+form {
+  border-radius: 8px;
+}
+
+.form-control,
+.form-select {
+  border-radius: 6px;
+  border-color: #dee2e6;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
+}
+
+/* Card Styles */
+.card {
+  border: none;
+  border-radius: 8px;
+}
+
+.card-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  font-weight: 500;
+  border-radius: 8px 8px 0 0;
+}
+
+/* Button Styles */
+.btn {
+  border-radius: 6px;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+}
+
+.btn-lg {
+  padding: 0.75rem 1.5rem;
+}
+
+/* Service Card Hover Effect */
+.service-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 60px 0;
+}
+
+/* Table Customization */
+.table {
+  margin-bottom: 0;
+}
+
+.table thead {
+  background-color: #f8f9fa;
+}
+
+.table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Alert Customization */
+.alert {
+  border-radius: 6px;
+  border-width: 0;
+}
+
+/* Navbar */
+nav {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal */
+.modal-content {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Spinner */
+.spinner-border {
+  width: 2rem;
+  height: 2rem;
+}
+
+/* Chat Box */
+.chat-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.chat-input {
+  flex: 0 0 auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card {
+    margin-bottom: 1rem;
+  }
+
+  .btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+  }
+}

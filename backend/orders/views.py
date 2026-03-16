@@ -1,6 +1,7 @@
 from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.conf import settings
 from orders.models import Order
 from .serializers import OrderSerializer
 from .paypal_service import PayPalService
@@ -43,7 +44,11 @@ class CreatePaymentView(APIView):
             return_url = request.data.get('return_url', 'http://localhost:3000/order-success')
             cancel_url = request.data.get('cancel_url', 'http://localhost:3000/order-cancelled')
             
-            payment = PayPalService.create_payment(
+            # Log PayPal configuration
+            logger.info(f"Creating payment with mode: {settings.PAYPAL_MODE}")
+            logger.info(f"Client ID: {settings.PAYPAL_CLIENT_ID}")
+            
+            payment, error_msg = PayPalService.create_payment(
                 service_id=service.id,
                 service_name=service.service_name,
                 price=float(service.price),
@@ -51,7 +56,7 @@ class CreatePaymentView(APIView):
                 cancel_url=cancel_url
             )
             
-            if payment and payment.create():
+            if payment:
                 # Get approval link
                 approval_url = None
                 for link in payment.links:
@@ -68,14 +73,15 @@ class CreatePaymentView(APIView):
                     'price': float(service.price)
                 }, status=status.HTTP_200_OK)
             else:
+                logger.error(f"Payment creation failed: {error_msg}")
                 return Response(
-                    {'error': 'Failed to create payment'},
+                    {'error': f'Failed to create payment: {error_msg}'},
                     status=status.HTTP_400_BAD_REQUEST
                 )
         except Exception as e:
-            logger.error(f"Create payment error: {str(e)}")
+            logger.error(f"Create payment error: {str(e)}", exc_info=True)
             return Response(
-                {'error': str(e)},
+                {'error': f'Error: {str(e)}'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 

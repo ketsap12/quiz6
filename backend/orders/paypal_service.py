@@ -33,11 +33,11 @@ class PayPalService:
             cancel_url: URL if payment is cancelled
             
         Returns:
-            Payment object or None
+            tuple: (Payment object or None, error_message or None)
         """
         if not paypalrestsdk:
             logger.error("PayPal SDK not installed. Install with: pip install paypalrestsdk")
-            return None
+            return None, "PayPal SDK not installed"
             
         try:
             payment = paypalrestsdk.Payment({
@@ -72,13 +72,15 @@ class PayPalService:
 
             if payment.create():
                 logger.info(f"Payment created successfully. ID: {payment.id}")
-                return payment
+                return payment, None
             else:
-                logger.error(f"Payment creation failed: {payment.error}")
-                return None
+                error_data = payment.error
+                error_msg = error_data.get('message', 'Payment creation failed') if isinstance(error_data, dict) else str(error_data)
+                logger.error(f"Payment creation failed: {error_msg}")
+                return None, error_msg
         except Exception as e:
             logger.error(f"PayPal payment creation error: {str(e)}")
-            return None
+            return None, str(e)
 
     @staticmethod
     def execute_payment(payment_id, payer_id):
@@ -113,10 +115,12 @@ class PayPalService:
                     "state": payment.state
                 }
             else:
-                logger.error(f"Payment execution failed: {payment.error}")
+                error_data = payment.error
+                error_msg = error_data.get('message', 'Payment execution failed') if isinstance(error_data, dict) else str(error_data)
+                logger.error(f"Payment execution failed: {error_msg}")
                 return {
                     "success": False,
-                    "error": payment.error
+                    "error": error_msg
                 }
         except Exception as e:
             logger.error(f"PayPal payment execution error: {str(e)}")
