@@ -69,7 +69,12 @@ export const getSellerServices = () => (dispatch) => {
 // Create Service
 export const createService = (formData) => (dispatch) => {
   const token = localStorage.getItem('token');
-  const config = { headers: { Authorization: `Bearer ${token}` } };
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'multipart/form-data',
+    },
+  };
   
   return axios.post(`${API_URL}/services/manage/`, formData, config);
 };
@@ -77,7 +82,12 @@ export const createService = (formData) => (dispatch) => {
 // Update Service
 export const updateService = (id, formData) => (dispatch) => {
   const token = localStorage.getItem('token');
-  const config = { headers: { Authorization: `Bearer ${token}` } };
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'multipart/form-data',
+    },
+  };
   
   return axios.patch(`${API_URL}/services/manage/${id}/`, formData, config);
 };

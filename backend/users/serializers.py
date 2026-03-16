@@ -32,7 +32,7 @@ class MyTokenObtainPairSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         from django.contrib.auth import authenticate
-        user = authenticate(username=attrs['email'], password=attrs['password'])
+        user = authenticate(email=attrs['email'], password=attrs['password'])
         if user is None:
             raise serializers.ValidationError('Invalid credentials')
         attrs['user'] = user

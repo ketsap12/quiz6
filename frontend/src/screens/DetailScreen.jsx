@@ -10,6 +10,23 @@ const DetailScreen = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  // Helper to get correct image for service
+  const getServiceImage = (service) => {
+    if (service.sample_image) {
+      return service.sample_image.startsWith('http') 
+        ? service.sample_image 
+        : `http://localhost:8000${service.sample_image}`;
+    }
+    
+    const name = service.service_name.toLowerCase();
+    if (name.includes('epoxy')) return '/epoxy.jpg';
+    if (name.includes('grout')) return '/grout.jpg';
+    if (name.includes('hardwood')) return '/hardwood.jpg';
+    if (name.includes('laminate')) return '/laminate.jpg';
+    if (name.includes('vinyl')) return '/vinyl.jpg';
+    return '/tilefloor.jpg'; // default for tile or others
+  };
+
   const [dummyServices] = useState({
     1: {
       id: 1,
@@ -118,9 +135,10 @@ const DetailScreen = () => {
         {/* Service Image */}
         <Col lg={6} className="mb-4">
           <img
-            src={service.image}
+            src={getServiceImage(service)}
             alt={service.service_name}
             style={{ height: '400px', width: '100%', objectFit: 'cover', borderRadius: '8px' }}
+            onError={(e) => { e.target.src = '/tilefloor.jpg'; }}
           />
         </Col>
 

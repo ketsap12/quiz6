@@ -19,6 +19,7 @@ const SellerDashboard = () => {
     price: '',
     duration_of_service: '',
   });
+  const [sampleImage, setSampleImage] = useState(null);
   const [formError, setFormError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -49,6 +50,7 @@ const SellerDashboard = () => {
   const handleAddService = () => {
     setEditingId(null);
     setFormData({ service_name: '', description: '', price: '', duration_of_service: '' });
+    setSampleImage(null);
     setFormError('');
     setShowModal(true);
   };
@@ -61,6 +63,7 @@ const SellerDashboard = () => {
       price: service.price,
       duration_of_service: service.duration_of_service,
     });
+    setSampleImage(null);
     setFormError('');
     setShowModal(true);
   };
@@ -68,11 +71,20 @@ const SellerDashboard = () => {
   const handleSaveService = async () => {
     if (!validateForm()) return;
 
+    const data = new FormData();
+    data.append('service_name', formData.service_name);
+    data.append('description', formData.description);
+    data.append('price', formData.price);
+    data.append('duration_of_service', formData.duration_of_service);
+    if (sampleImage) {
+      data.append('sample_image', sampleImage);
+    }
+
     try {
       if (editingId) {
-        await updateService(editingId, formData);
+        await dispatch(updateService(editingId, data));
       } else {
-        await createService(formData);
+        await dispatch(createService(data));
       }
       setShowModal(false);
       setSuccessMessage(editingId ? 'Service updated successfully!' : 'Service created successfully!');
@@ -86,7 +98,7 @@ const SellerDashboard = () => {
   const handleDeleteService = async (id) => {
     if (window.confirm('Are you sure you want to delete this service?')) {
       try {
-        await deleteService(id);
+        await dispatch(deleteService(id));
         setSuccessMessage('Service deleted successfully!');
         dispatch(getSellerServices());
         setTimeout(() => setSuccessMessage(''), 3000);
@@ -99,6 +111,10 @@ const SellerDashboard = () => {
   const handleChangeForm = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleImageChange = (e) => {
+    setSampleImage(e.target.files[0]);
   };
 
   return (
@@ -151,26 +167,43 @@ const SellerDashboard = () => {
                 />
               </Form.Group>
 
-              <Form.Group className="mb-3">
-                <Form.Label>Price (₱)</Form.Label>
-                <Form.Control
-                  type="number"
-                  name="price"
-                  placeholder="2500"
-                  value={formData.price}
-                  onChange={handleChangeForm}
-                />
-              </Form.Group>
+              <Row>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Price (₱)</Form.Label>
+                    <Form.Control
+                      type="number"
+                      name="price"
+                      placeholder="2500"
+                      value={formData.price}
+                      onChange={handleChangeForm}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Duration</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="duration_of_service"
+                      placeholder="e.g., 2-3 days"
+                      value={formData.duration_of_service}
+                      onChange={handleChangeForm}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
 
               <Form.Group className="mb-3">
-                <Form.Label>Duration</Form.Label>
+                <Form.Label>Service Image</Form.Label>
                 <Form.Control
-                  type="text"
-                  name="duration_of_service"
-                  placeholder="e.g., 2-3 days"
-                  value={formData.duration_of_service}
-                  onChange={handleChangeForm}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
                 />
+                <Form.Text className="text-muted">
+                  Upload a photo of your work to attract customers.
+                </Form.Text>
               </Form.Group>
             </Form>
           </Modal.Body>
@@ -195,11 +228,11 @@ const SellerDashboard = () => {
                 <Spinner animation="border" />
               </div>
             ) : services && services.length > 0 ? (
-              <Table responsive striped hover>
+              <Table responsive striped hover vertical-align="middle">
                 <thead className="table-light">
                   <tr>
+                    <th>Image</th>
                     <th>Service Name</th>
-                    <th>Description</th>
                     <th>Price</th>
                     <th>Duration</th>
                     <th>Actions</th>
@@ -208,8 +241,20 @@ const SellerDashboard = () => {
                 <tbody>
                   {services.map((service) => (
                     <tr key={service.id}>
-                      <td className="fw-bold">{service.service_name}</td>
-                      <td>{service.description.substring(0, 30)}...</td>
+                      <td>
+                        <img 
+                          src={service.sample_image || '/tilefloor.jpg'} 
+                          alt={service.service_name} 
+                          style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '4px' }}
+                          onError={(e) => { e.target.src = '/tilefloor.jpg'; }}
+                        />
+                      </td>
+                      <td>
+                        <div className="fw-bold">{service.service_name}</div>
+                        <small className="text-muted d-block" style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {service.description}
+                        </small>
+                      </td>
                       <td>₱{service.price?.toLocaleString()}</td>
                       <td>{service.duration_of_service}</td>
                       <td>
