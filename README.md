@@ -1,266 +1,121 @@
-# Flooring Services Platform
+# 🏠 Flooring Services Platform (Solo Quiz Submission)
 
-A full-stack web application for browsing, booking, and managing professional flooring services.
+A comprehensive full-stack web application designed for browsing, booking, and managing professional flooring services, featuring an AI-powered chatbot and secure PayPal integration.
 
-## 📋 Features
+## 📝 Project Overview
 
-### For Users
-- Browse available flooring services with detailed descriptions
-- View service details and pricing
-- Create an account and sign in securely
-- Apply to become a service provider (seller)
-- Book services and track order history
-- Chat with AI assistant for flooring-related questions
-- Manage user profile
+This project is a unified repository containing both the **Frontend (React)** and **Backend (Django)**. It serves as a complete solution for a flooring service marketplace where users can hire experts, and experts can manage their service listings.
 
-### For Sellers
-- Manage flooring service listings
-- Add, update, and delete services
-- Receive payments directly through PayPal
-- Build reputation with customer ratings
+## 🚀 Quick Start (Setup Instructions)
 
-### For Admins
-- Manage user accounts
-- Review and approve/decline seller applications
-- Assign merchant IDs to sellers
-- Monitor platform activity
+### 1. Backend Setup (Django)
 
-## 🛠️ Tech Stack
+1.  **Navigate to the backend directory:**
+    ```bash
+    cd backend
+    ```
+2.  **Create and activate a virtual environment:**
+    ```bash
+    python -m venv venv
+    # Windows:
+    venv\Scripts\activate
+    # macOS/Linux:
+    source venv/bin/activate
+    ```
+3.  **Install dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+4.  **Configure Environment Variables:**
+    - Copy `.env.sample` to a new file named `.env`.
+    - **CRITICAL:** Fill in your actual PayPal REST API credentials in the `.env` file.
+    ```bash
+    cp .env.sample .env
+    ```
+5.  **Run Migrations:**
+    ```bash
+    python manage.py migrate
+    ```
+6.  **Create Superuser (Admin):**
+    ```bash
+    # Use the script to create the default admin (admin@flooring.com / admin123)
+    python create_superuser.py
+    ```
+7.  **Start the Backend Server:**
+    ```bash
+    python manage.py runserver
+    ```
+    *Backend runs on: `http://localhost:8000`*
 
-### Frontend
-- **React** - UI framework
-- **Redux** - State management
-- **React Bootstrap** - UI components
-- **Axios** - HTTP client
-- **React Router** - Navigation
+### 2. Frontend Setup (React)
 
-### Backend
-- **Django** - Web framework
-- **Django REST Framework** - API development
-- **JWT** - Authentication
-- **SQLite** - Database (development)
+1.  **Navigate to the frontend directory:**
+    ```bash
+    cd frontend
+    ```
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+3.  **Start the React application:**
+    ```bash
+    npm start
+    ```
+    *Frontend runs on: `http://localhost:3000`*
 
-## 📦 Installation & Setup
+---
 
-### Backend Setup
+## 🔐 Demo Credentials
 
-1. **Create and activate virtual environment:**
-```bash
-cd backend
-python -m venv venv
-# On Windows
-venv\Scripts\activate
-# On macOS/Linux
-source venv/bin/activate
-```
+-   **Admin Account:** `admin@flooring.com` / `admin123`
+-   **Test Buyer Account:** (Create via Sign Up or use `buyer@example.com` / `pass123` if already created)
 
-2. **Install dependencies:**
-```bash
-pip install django djangorestframework djangorestframework-simplejwt django-cors-headers pillow
-```
+---
 
-3. **Run migrations:**
-```bash
-python manage.py migrate
-```
+## 🛠️ Key Features & Content
 
-4. **Create superuser (admin account):**
-```bash
-# Admin Email: admin@flooring.com
-# Admin Password: admin123
-python create_superuser.py
-```
+### 💳 PayPal Payment Integration
+- **Fully Automated Flow**: Users can pay for services directly via PayPal Sandbox.
+- **Dynamic Pricing**: Calculates totals based on the specific service selected.
+- **Secure Execution**: Payments are verified on the backend before an order is created.
+- **Transaction Tracking**: Stores PayPal Transaction IDs for every successful order.
 
-5. **Start Django server:**
-```bash
-python manage.py runserver
-```
+### 🤖 AI Flooring Assistant
+- **Context-Aware**: Provides expert advice on flooring types (Tile, Hardwood, Vinyl, etc.).
+- **Smart Support**: Helps users navigate the booking process.
+- **Domain Restricted**: Only responds to flooring and platform-related inquiries.
 
-The backend will be available at: `http://localhost:8000`
+### 👤 Multi-Role Dashboard
+- **Users**: Browse services, view details, and book via PayPal.
+- **Sellers**: Manage their own services (Create/Update/Delete) and view earnings.
+- **Admins**: Review seller applications and manage the user database.
 
-### Frontend Setup
-
-1. **Navigate to frontend directory:**
-```bash
-cd frontend
-```
-
-2. **Install dependencies:**
-```bash
-npm install
-```
-
-3. **Start React development server:**
-```bash
-npm start
-```
-
-The frontend will be available at: `http://localhost:3000`
-
-## 🔐 User Roles
-
-### Admin
-- Email: `admin@flooring.com`
-- Password: `admin123`
-- Access: User management, seller application review
-
-### Seller (After Approval)
-- Can add and manage services
-- Receive payments through PayPal
-- Track service bookings
-
-### User (Default for new registrations)
-- Can browse and book services
-- Can apply to become a seller
-- Can view order history
-
-## 📡 API Endpoints
-
-### Authentication
-- `POST /api/v1/users/login/` - User login
-- `POST /api/v1/users/register/` - User registration
-- `GET /api/v1/users/profile/` - Get user profile
-
-### Seller Applications
-- `POST /api/v1/applications/apply/` - Submit seller application
-- `GET /api/v1/applications/list/` - List applications (admin only)
-- `PATCH /api/v1/applications/{id}/approve/` - Approve application
-- `PATCH /api/v1/applications/{id}/decline/` - Decline application
-
-### Services
-- `GET /api/v1/services/list/` - List all services (public)
-- `GET /api/v1/services/{id}/` - Get service detail (public)
-- `GET /api/v1/services/manage/` - List seller's services
-- `POST /api/v1/services/manage/` - Create service
-- `PATCH /api/v1/services/manage/{id}/` - Update service
-- `DELETE /api/v1/services/manage/{id}/` - Delete service
-
-### Orders
-- `POST /api/v1/orders/create/` - Create order after payment
-- `GET /api/v1/orders/history/` - Get user's order history
-
-### Chat
-- `POST /api/v1/chat/ask/` - Send message to AI chatbot
-
-## 🎨 Available Services
-
-The platform features realistic flooring services:
-- Tile Floor Installation
-- Hardwood Floor Polishing
-- Vinyl Flooring Installation
-- Epoxy Floor Coating
-- Laminate Floor Repair
-- Grout Cleaning Service
-
-## 💳 Payment Integration
-
-The platform supports PayPal integration for service payments:
-- Services are paid directly to the seller's PayPal account
-- Platform tracks transactions and creates order records
-- Transaction IDs are stored for reference
+---
 
 ## 🗂️ Project Structure
 
 ```
-backend/
-├── users/           # User authentication & profiles
-├── applications/    # Seller application management
-├── services/        # Service listings
-├── orders/          # Order & payment management
-├── chat/            # AI chatbot
-└── manage.py
-
-frontend/
-├── src/
-│   ├── components/
-│   │   ├── Navbar.jsx
-│   │   ├── Footer.jsx
-│   │   ├── ProtectedRoute.jsx
-│   │   └── ChatBot.jsx
-│   ├── screens/
-│   │   ├── HomeScreen.jsx
-│   │   ├── DetailScreen.jsx
-│   │   ├── SignIn.jsx
-│   │   ├── SignUp.jsx
-│   │   ├── ApplySeller.jsx
-│   │   ├── UserProfile.jsx
-│   │   ├── SellerDashboard.jsx
-│   │   ├── UserScreen.jsx
-│   │   └── ChatScreen.jsx
-│   ├── actions/     # Redux actions
-│   ├── reducers/    # Redux reducers
-│   ├── constants/   # Redux constants
-│   ├── store.js     # Redux store
-│   ├── App.js
-│   └── index.js
+.
+├── backend/                # Django Backend
+│   ├── .env.sample         # Template for environment variables
+│   ├── requirements.txt    # Python dependencies
+│   ├── orders/             # PayPal integration & Order logic
+│   ├── services/           # Service marketplace logic
+│   ├── users/              # JWT Auth & Profile management
+│   └── chat/               # AI Chatbot logic
+└── frontend/               # React Frontend
+    ├── package.json        # Node dependencies
+    ├── src/
+    │   ├── components/     # Reusable UI (PayPal Button, Navbar)
+    │   ├── screens/        # Page components (Home, Success, Dashboard)
+    │   ├── actions/        # Redux state logic
+    │   └── store.js        # Global state management
 ```
 
-## 🚀 Running the Project
+## ⚠️ Important Notes for Submission
+- **Environment Variables**: The actual `.env` file is **not included** in this repository to comply with security standards. Please use the `.env.sample` to set up your local credentials.
+- **Combined Repository**: Both frontend and backend are maintained in this single repository for easy evaluation.
+- **CORS Configuration**: The backend is configured to allow requests from `http://localhost:3000`.
 
-### Terminal 1 - Backend
-```bash
-cd backend
-python manage.py runserver
-```
-
-### Terminal 2 - Frontend
-```bash
-cd frontend
-npm start
-```
-
-Then open [http://localhost:3000](http://localhost:3000) in your browser.
-
-## 👤 Demo Accounts
-
-### Admin Account
-- **Email:** admin@flooring.com
-- **Password:** admin123
-- **Role:** Admin
-
-### Test User Registration
-You can create a new account directly through the Sign Up page.
-
-## 📝 Admin Panel Access
-
-1. Sign in as admin
-2. Go to **Admin Panel** in the navbar
-3. Manage users and seller applications
-
-## 🤖 AI Chatbot
-
-The platform includes an AI chatbot that:
-- Answers flooring-related questions
-- Provides information about services
-- Helps users with platform functionality
-- Only responds to relevant topics
-
-Ask it about:
-- Different flooring types
-- Installation and maintenance
-- Service durations and pricing
-- How to book services
-
-## 🛠️ Troubleshooting
-
-### Backend Issues
-- Ensure Python virtual environment is activated
-- Check that all dependencies are installed: `pip list`
-- Make sure port 8000 is not in use
-
-### Frontend Issues
-- Clear node_modules and reinstall: `rm -rf node_modules && npm install`
-- Clear browser cache or use incognito mode
-- Check that backend is running before using frontend
-
-### CORS Errors
-- Ensure Django CORS headers are configured
-- Check that frontend is running on http://localhost:3000
-
-## 📄 License
-
-This project is for educational purposes.
-
-## 👥 Support
-
-For issues or questions, contact: support@flooringservices.com
+---
+*This project was developed as a solo quiz submission.*
